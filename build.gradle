@@ -33,7 +33,7 @@ dependencies {
 }
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
+    archiveClassifier = 'sources'
     from sourceSets.main.allSource
 }
 
@@ -70,6 +70,16 @@ test {
 }
 
 publishing {
+    repositories {
+        maven {
+            url "https://repo.roxymc.net/snapshots"
+            name = "roxymc"
+            credentials {
+                username = project.findProperty('roxymcUsername') ?: ''
+                password = project.findProperty('roxymcPassword') ?: ''
+            }
+        }
+    }
     publications {
         mavenJava(MavenPublication) {
             from components.java
@@ -91,9 +101,11 @@ clean.doLast {
 }
 
 if (version.endsWith("SNAPSHOT")) {
+    /*
     publishing.repositories {
         mavenLocal()
     }
+     */
 } else {
     publishing.repositories {
         maven {
