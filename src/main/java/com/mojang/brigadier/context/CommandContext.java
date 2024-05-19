@@ -10,6 +10,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class CommandContext<S> {
 
@@ -108,6 +109,19 @@ public class CommandContext<S> {
         } else {
             throw new IllegalArgumentException("Argument '" + name + "' is defined as " + result.getClass().getSimpleName() + ", not " + clazz);
         }
+    }
+
+    public <V> V getArgument(final String name) {
+        return this.<V>findArgument(name).orElse(null);
+    }
+
+    public <V> Optional<V> findArgument(final String name) {
+        return this.<V>findParsedArgument(name).map(ParsedArgument::getResult);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <V> Optional<ParsedArgument<S, V>> findParsedArgument(final String name) {
+        return Optional.ofNullable((ParsedArgument<S, V>) arguments.get(name));
     }
 
     @Override

@@ -3,7 +3,7 @@ import groovy.io.FileType
 apply plugin: 'java-library'
 apply plugin: 'maven-publish'
 
-group = 'com.mojang'
+group = 'net.roxymc'
 version = project.hasProperty('buildNumber') ? "${project.majorMinor}.${project.buildNumber}" : "${project.majorMinor}.0-SNAPSHOT"
 
 buildscript {

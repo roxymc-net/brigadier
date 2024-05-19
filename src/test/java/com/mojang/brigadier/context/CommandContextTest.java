@@ -52,6 +52,29 @@ public class CommandContextTest {
     }
 
     @Test
+    public void testGetArgument0() throws Exception {
+        final CommandContext<Object> context = builder.withArgument("foo", new ParsedArgument<>(0, 1, 123)).build("123");
+        assertThat(context.<Integer>getArgument("foo"), is(123));
+    }
+
+    @Test
+    public void testFindArgument() throws Exception {
+        final CommandContext<Object> context = builder.withArgument("foo", new ParsedArgument<>(0, 1, 123)).build("123");
+        assertThat(context.<Integer>findArgument("foo").orElse(null), is(123));
+    }
+
+    @Test
+    public void testFindArgument_nonexistent() throws Exception {
+        assertThat(builder.build("").<Integer>findArgument("foo").orElse(null), is((Object) null));
+    }
+
+    @Test
+    public void testFindArgument_null() throws Exception {
+        final CommandContext<Object> context = builder.withArgument("foo", new ParsedArgument<>(0, 0, null)).build("");
+        assertThat(context.<Integer>findArgument("foo").orElse(null), is((Object) null));
+    }
+
+    @Test
     public void testSource() throws Exception {
         assertThat(builder.build("").getSource(), is(source));
     }
