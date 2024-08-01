@@ -13,6 +13,7 @@ import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.roxymc.brigadier.tree.MultiLiteralCommandNode;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -68,6 +69,12 @@ public abstract class CommandNode<S> implements Comparable<CommandNode<S>> {
     public void addChild(final CommandNode<S> node) {
         if (node instanceof RootCommandNode) {
             throw new UnsupportedOperationException("Cannot add a RootCommandNode as a child to any other CommandNode");
+        }
+
+        if (node instanceof MultiLiteralCommandNode) {
+            ((MultiLiteralCommandNode<S>) node).buildLiteralNodes()
+                    .forEach(this::addChild);
+            return;
         }
 
         final CommandNode<S> child = children.get(node.getName());
